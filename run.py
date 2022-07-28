@@ -1,58 +1,56 @@
 import uuid
 from flask import *
 from flask_socketio import *
+import datetime, time
+from datetime import timedelta
+
 
 # Init the server
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'some super secret key!'
-socketio = SocketIO(app, logger=True)
-
-clients = set()
-
+socketio = SocketIO(app, logger=True, ping_interval=(2,1))
+clients = {}
 
 @app.route('/')
 def hi():  
     return render_template('connection.html')
 
+    
+
 @socketio.on('connect')
 def connect():
-    print("connect sid:", request.sid)
+    print("Connect")
+
+
+@socketio.on('disconnect')
+def disconnect():
+    print("Disconnect")
+    pass
+
+@socketio.on('time_since')
+def time_since():
+    global clients
+    c = time.time()
+    emit('set_time', {'time' : c - clients[request.sid]})
+
 
 @socketio.on("register")
-def register(data):
+def register():
     global clients
     print("register sid:", request.sid)
-    clients.add(request.sid)
-    # if not data.get('uuid'):
-    #     uid = uuid.uuid4().hex
-    #     emit("registered", {'uid': uid})
-    #     clients.add(uid)
-    # else:
-    #     if data['uuid'] not in clients:
-    #         clients.add(data['uuid'])
+    curr_time = time.time()
+    clients[request.sid] = curr_time
+    print('Number of clients>>>>>',len(clients))
     emit('number_of_users', {'n': len(clients)}, broadcast=True)
+    
 
-
-@socketio.on('disconnect_user')
-def remove_session(data):
+@socketio.on('deregister')
+def remove_session():
     global clients
     print("disconnect sid", request.sid)
-    clients.remove(request.sid)
-    
-def test_connect():
-    print('>>>>>>> connected')
-    emit('my response', {'data': 'Connected'})
-
-def test_disconnect():
-    print('Client disconnected')
-# Receive a message from the front end HTML
-
-
-@socketio.on('send_message')
-def message_received(data):
-    print(data['text'])
-    emit('message_from_server', {'text': 'Message received!'})
-
+    clients.pop(request.sid)
+    emit('number_of_users', {'n': len(clients)}, broadcast=True)
+    emit('remove_user')
 
 # Actually Start the App
 if __name__ == '__main__':

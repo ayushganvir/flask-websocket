@@ -13,41 +13,56 @@
     
     $( document ).ready(function() {
         socket = io();
-        
-        socket.on('connect', function() {
-            console.log("Connection made");
-            $("#disconnect").show();
-            $("#connect").hide();
-            console.log('>>>>', $.cookie("uid"))
-            socket.emit("register", {'uuid': $.cookie("uid")});
-        });
-
-        // socket.on("registered", function(data){
-        //     console.log("> registration done >", data);
-        //     $.cookie("uid", data.uid)
-        // })
 
         socket.on('disconnect', function() {
-            console.log("Disconnected from server");
-            $("#connect").show();
-            $("#disconnect").hide();
-            uid = $.cookie("uid")
-            socket.emit('disconnect_user', data = {'uid' : uid})    
-            $.removeCookie("uid")
+            console.log("Disconnected");
+        });
+        
+        socket.on('connect', function() {
+            console.log('Socket', socket.id)
+            console.log("Connection made>>>>>>");
+            socket.emit("register");
+            $("#disconnect").show();
+            $("#connect").hide();
         });
 
+        
         socket.on('number_of_users', function(data) {
+            console.log("In number of user event", data.n)
             $('#info').text(data.n);
         });
 
 
+        socket.on('remove_user', function() {
+            socket.disconnect()
+            console.log("DISCONNECTED")
+        });
+
+
+        socket.on('set_time', function(data) {
+            console.log(data.time)
+            $('#time').text(data.time);
+
+        });
         $('#connect').click(function(){
-            socket = io();
+            // socket = io();
+            // location.reload(true);
+            $("#disconnect").show();
+            $("#connect").hide();
+            socket.connect();
         });
+
         $('#disconnect').click(function(){
-            socket.disconnect();
-            
+            console.log("Disconnected from server");
+            $("#connect").show();
+            $("#disconnect").hide();
+            socket.emit('deregister')
+
         });
+
+        $('#gettime').click(function(){
+            socket.emit('time_since')
+        })
         
     });    
     </script>
@@ -58,7 +73,8 @@
 
 <button id="connect">Connect</button>
 <button id="disconnect">Disconnect</button>
-
+<button id="gettime">Active Since</button>
+<h1 id="time">time</h1>
 
 </body>
 </html>
