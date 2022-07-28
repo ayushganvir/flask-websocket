@@ -2,23 +2,35 @@ import uuid
 from flask import *
 from flask_socketio import *
 import datetime, time
-from datetime import timedelta
+from threading import Lock
 
 
 # Init the server
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'some super secret key!'
-socketio = SocketIO(app, logger=True, ping_interval=(2,1))
+async_mode = None
+socketio = SocketIO(app, logger=True, ping_interval=(2,1), async_mode=async_mode)
+thread = None
+thread_lock = Lock()
+
 clients = {}
 
 @app.route('/')
 def hi():  
-    return render_template('connection.html')
+    return render_template('connection.html', async_mode=socketio.async_mode)
 
+
+def client_ping(t = 60):
+    while True:
+        socketio.sleep(t)
+        date_time = datetime.datetime.now().strftime("%H:%M:%S")
+        socketio.emit('minutely_message',
+                      {'message': 'Connected on time' + date_time + ' See you in a Minute'})
     
 
 @socketio.on('connect')
 def connect():
+    socketio.start_background_task(client_ping)
     print("Connect")
 
 
@@ -31,7 +43,9 @@ def disconnect():
 def time_since():
     global clients
     c = time.time()
-    emit('set_time', {'time' : c - clients[request.sid]})
+    active_time = round(c - clients[request.sid], 2)
+    print('Active time is>>>>>', active_time)
+    emit('set_time', {'time' : active_time})
 
 
 @socketio.on("register")

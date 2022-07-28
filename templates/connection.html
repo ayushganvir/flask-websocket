@@ -40,8 +40,13 @@
 
 
         socket.on('set_time', function(data) {
-            console.log(data.time)
-            $('#time').text(data.time);
+            $('#time').text(data.time + ' Seconds');
+
+        });
+
+
+        socket.on('minutely_message', function(data) {
+            $('#update').text(data.message);
 
         });
         $('#connect').click(function(){
@@ -53,6 +58,7 @@
         });
 
         $('#disconnect').click(function(){
+            $('#info').text = ($('#info').text() - 1);
             console.log("Disconnected from server");
             $("#connect").show();
             $("#disconnect").hide();
@@ -69,12 +75,16 @@
 
 </head>
 <body>
-<h1 id="info">HI</h1>
+<h1> Number of connected Users are </h1> 
+<h2 id="info">HI</h2>
 
 <button id="connect">Connect</button>
 <button id="disconnect">Disconnect</button>
 <button id="gettime">Active Since</button>
-<h1 id="time">time</h1>
+<h3 id="time">Click 'Active Since' button to see time this client is connected to the server.</h3>
+<h3 id="minute_connection">Minutely Connection reminder will be here every 60 seconds</h3>
+<h3 id="update"></h3>
+
 
 </body>
 </html>
