@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+    var socket;
+    
+    $( document ).ready(function() {
+        socket = io();
+        
+        socket.on('connect', function() {
+            console.log("Connection made");
+            $("#disconnect").show();
+            $("#connect").hide();
+            console.log('>>>>', $.cookie("uid"))
+            socket.emit("register", {'uuid': $.cookie("uid")});
+        });
+
+        // socket.on("registered", function(data){
+        //     console.log("> registration done >", data);
+        //     $.cookie("uid", data.uid)
+        // })
+
+        socket.on('disconnect', function() {
+            console.log("Disconnected from server");
+            $("#connect").show();
+            $("#disconnect").hide();
+            uid = $.cookie("uid")
+            socket.emit('disconnect_user', data = {'uid' : uid})    
+            $.removeCookie("uid")
+        });
+
+        socket.on('number_of_users', function(data) {
+            $('#info').text(data.n);
+        });
+
+
+        $('#connect').click(function(){
+            socket = io();
+        });
+        $('#disconnect').click(function(){
+            socket.disconnect();
+            
+        });
+        
+    });    
+    </script>
+
+</head>
+<body>
+<h1 id="info">HI</h1>
+
+<button id="connect">Connect</button>
+<button id="disconnect">Disconnect</button>
+
+
+</body>
+</html>
