@@ -2,7 +2,7 @@
 
 ## Websocket Implementation for basic understanding.
 
-WebSocket is a protocol,that provides full-duplex communication channels over a single TCP connection.
+WebSocket is a protocol,that provides full-duplex communication channels over a single TCP connection. [Click here for my websocket doc for flask.](https://github.com/ayushganvir/Markdowns/blob/main/flask/socketio.md)
 
 
 ### To install requirements for the project:

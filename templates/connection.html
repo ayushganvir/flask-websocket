@@ -46,7 +46,7 @@
 
 
         socket.on('minutely_message', function(data) {
-            $('#update').text(data.message);
+            $('#').text(data.message);
 
         });
         $('#connect').click(function(){
@@ -75,7 +75,7 @@
 
 </head>
 <body>
-<h1> Number of connected Users are </h1> 
+<h2> Number of connected Users are </h2> 
 <h2 id="info">HI</h2>
 
 <button id="connect">Connect</button>

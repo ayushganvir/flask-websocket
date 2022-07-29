@@ -20,7 +20,7 @@ def hi():
     return render_template('connection.html', async_mode=socketio.async_mode)
 
 
-def client_ping(t = 60):
+def client_ping(t = 9):
     while True:
         socketio.sleep(t)
         date_time = datetime.datetime.now().strftime("%H:%M:%S")
