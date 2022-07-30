@@ -1,8 +1,16 @@
 import uuid
 from flask import *
 from flask_socketio import *
+from dataclasses import dataclass
 
-# Init the server
+@dataclass
+class InventoryItem:
+    name: str
+    unit_price: float
+    quantity_on_hand: int = 0
+
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'some super secret key!'
 socketio = SocketIO(app, logger=True)
@@ -20,16 +28,10 @@ def connect():
 
 @socketio.on("register")
 def register(data):
+    print('>>> Session', Request, type(Request))
     global clients
     print("register sid:", request.sid)
     clients.add(request.sid)
-    # if not data.get('uuid'):
-    #     uid = uuid.uuid4().hex
-    #     emit("registered", {'uid': uid})
-    #     clients.add(uid)
-    # else:
-    #     if data['uuid'] not in clients:
-    #         clients.add(data['uuid'])
     emit('number_of_users', {'n': len(clients)}, broadcast=True)
 
 
