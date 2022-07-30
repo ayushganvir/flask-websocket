@@ -4,7 +4,7 @@
 
 WebSocket is a protocol,that provides full-duplex communication channels over a single TCP connection. [Click here for my websocket doc for flask.](https://github.com/ayushganvir/Markdowns/blob/main/flask/socketio.md)
 
-
+Port and Secret key are preconfigured.
 ### To install requirements for the project:
 ```python
 pip install -r requirements.txt
