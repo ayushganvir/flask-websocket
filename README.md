@@ -1,6 +1,7 @@
 # Flask websocket io 
 
-## Websocket Implementation for basic understanding. (Clients are different browsers [for same browser check this branch.](https://github.com/ayushganvir/flask-websocket/tree/socket))
+## Websocket Implementation for basic understanding. (Clients are different browsers)
+[for same browser check this branch.](https://github.com/ayushganvir/flask-websocket/tree/socket)
 
 WebSocket is a protocol,that provides full-duplex communication channels over a single TCP connection. [Click here for my websocket docs for flask.](https://github.com/ayushganvir/Markdowns/blob/main/flask/socketio.md)
 
