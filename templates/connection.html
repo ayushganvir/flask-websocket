@@ -25,25 +25,21 @@
             $("#disconnect").show();
             $("#connect").hide();
         });
-
         
         socket.on('number_of_users', function(data) {
             console.log("In number of user event", data.n)
             $('#info').text(data.n);
         });
 
-
         socket.on('remove_user', function() {
             socket.disconnect()
             console.log("DISCONNECTED")
         });
 
-
         socket.on('set_time', function(data) {
             $('#time').text(data.time + ' Seconds');
 
         });
-
 
         socket.on('minutely_message', function(data) {
             $('#').text(data.message);
